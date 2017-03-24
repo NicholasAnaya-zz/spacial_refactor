@@ -4,8 +4,9 @@ class SpotifyApi
   @simplified_genres = ['Blues', 'Classical','Country','Electronic','Hip Hop','Industrial','Jazz','Pop','R&B','Rock','World']
 
   def initialize(url)
-    @url = url
-    @api_data = JSON.parse(RestClient.get("http://api.spotify.com/v1/search?q=genre:#{@search_term}&limit=50&offset=0&type=artist")
+    @url = "http://api.spotify.com/v1/search?q=genre:rock&limit=50&offset=0&type=artist"
+    result = RestClient.get(@url)
+    @api_data = JSON.parse(result)
   end
 
   def make_artists
@@ -19,12 +20,62 @@ class SpotifyApi
   end
 
   def make_related_genres
-    all_artists = api_data["artists"]["items"]
+    genre_hash = {}
+    all_artists = @api_data["artists"]["items"]
     all_artists.each do |artist|
-      make_artists
-    genre_list =
+      artist_name = artist["name"]
+      genre_array = artist["genres"]
+      genre_hash[artist_name] = {"genres" => genre_array}
+    end
+    genre_hash
   end
 
+
+  {
+    "artists": {
+      "href": "https://api.spotify.com/v1/search?query=genre%3Arock&type=artist&offset=0&limit=50",
+      "items": [ {"external_urls": {"spotify": "https://open.spotify.com/artist/3WrFJ7ztbogyGnTHbHJFl2"},
+                  "followers": {
+                    "href": null,
+                    "total": 2966527
+                  },
+                  "genres": [
+                    "british invasion",
+                    "classic rock",
+                    "merseybeat",
+                    "protopunk",
+                    "psychedelic rock",
+                    "rock"
+                  ],
+                  "href": "https://api.spotify.com/v1/artists/3WrFJ7ztbogyGnTHbHJFl2",
+                  "id": "3WrFJ7ztbogyGnTHbHJFl2",
+                  "images": [
+                        {
+                          "height": 1000,
+                          "url": "https://i.scdn.co/image/934c57df9fbdbbaa5e93b55994a4cb9571fd2085",
+                          "width": 1000
+                        },
+                        {
+                          "height": 640,
+                          "url": "https://i.scdn.co/image/5f70d98d3e4616a02a3afe2aa9a840b9157b92a1",
+                          "width": 640
+                        },
+                        {
+                          "height": 200,
+                          "url": "https://i.scdn.co/image/7fe1a693adc52e274962f1c61d76ca9ccc62c191",
+                          "width": 200
+                        },
+                        {
+                          "height": 64,
+                          "url": "https://i.scdn.co/image/857b1ce5b1b372b873b0a8bdb3ff8023b6c61d39",
+                          "width": 64
+                        }
+                  ],
+                  "name": "The Beatles",
+                  "popularity": 82,
+                  "type": "artist",
+                  "uri": "spotify:artist:3WrFJ7ztbogyGnTHbHJFl2"
+                }
 
 
 
