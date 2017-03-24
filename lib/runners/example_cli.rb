@@ -1,13 +1,13 @@
-require 'pry'
 class ExampleCLI
 
+<<<<<<< HEAD
 attr_accessor :input, :search, :artist_name, :artist_data
 @@pop_arr = []
 
+=======
+>>>>>>> parent of baa5cb9... end of friday
   def call
-    puts "Welcome, to the Spotify Popular Artist CLI interface app,"
-    puts "where you can search for artists based on popularity by genre!"
-    puts
+    puts "Welcome, what Spotify Artist should I use?"
     run
   end
 
@@ -16,15 +16,13 @@ attr_accessor :input, :search, :artist_name, :artist_data
   end
 
   def run
-   help
-   input = ""
-   while input
-     input = get_user_input
-     case input
-     when "help"
+    print "New search keyword: "
+    input = get_user_input
+    if input == "help"
       help
-    when "exit"
+    elsif input == "exit"
       exit
+<<<<<<< HEAD
     when "search"
       puts "Enter a genre:"
         @input = get_user_input
@@ -35,20 +33,18 @@ attr_accessor :input, :search, :artist_name, :artist_data
         return_names
     when "genre"
         genre
+=======
+>>>>>>> parent of baa5cb9... end of friday
     else
-      help
+      search(input)
     end
-  end
-  end
-
-  def input
-    @input
+    run
   end
 
-
-  def search
+  def search(input)
     search_term = input.split(" ").join("%20").downcase
     puts "Your search term was #{input.capitalize}, I am searching..."
+<<<<<<< HEAD
     artist_data = ""
 
     counter = 0
@@ -62,6 +58,13 @@ attr_accessor :input, :search, :artist_name, :artist_data
     puts "Thank you for your patience. I found this on Spotify:"
     artist_data.each_with_index do |(artist, pop), index |
       puts " #{index + 1}. #{artist}"
+=======
+    url = "https://api.spotify.com/v1/search?q=#{search_term}&type=track&market=US"
+    albums = ExampleApi.new(url).make_albums
+    puts "Thank you for your patience. I found this on Spotify:"
+    albums.each do |album|
+      puts album.example
+>>>>>>> parent of baa5cb9... end of friday
     end
     @artist_data = artist_data
   end
@@ -89,10 +92,9 @@ attr_accessor :input, :search, :artist_name, :artist_data
   end
 
   def help
-    puts "Type 'genre' for a list of genres."
-    puts "Type 'search' to search by genre and popularity."
-    puts "Type 'exit' to exit."
-    puts "Type 'help' to view this menu again."
+    puts "Type 'exit' to exit"
+    puts "Type 'help' to view this menu again"
+    puts "Type anything else to search for an Artist's albums"
   end
 
 end
