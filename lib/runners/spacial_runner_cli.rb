@@ -22,15 +22,15 @@ class SpacialRunnerCLI
     run
   end
 
-  def search
+  def search(input)
     search_term = input.split(" ").join("%20").downcase
     puts "You are searching for #{input.capitalize}, searching..."
     url = "http://api.spotify.com/v1/search?q=genre:#{@search_term}&limit=50&offset=0&type=artist"
 
+    results = SpotifyApi(url).new
 
-    artists = SpotifyApi.new(url).make_artists
-    result = JSON.parse(first_url_artist_data_raw)
-    artist_information_array = result["artists"]["items"]
+    artist_hash = SpotifyApi.new(url).make_artists
+    genre_hash = SpotifyApi.new(url).make_related_genres
 
     while result["artists"]["next"]
       artist_data_raw = RestClient.get(result["artists"]["next"])
