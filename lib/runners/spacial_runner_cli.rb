@@ -1,13 +1,64 @@
-require 'pry'
-class SpacialRunner
+class SpacialRunnerCLI
 
-attr_accessor :input, :search, :artist_name, :artist_data
+  def call
+    puts "Welcometo SPACIAL, what genre should I look up?"
+    run
+  end
 
- @@popularity_array = []
- @@artist_hash = {}
- @@simplified_genres = ['Blues', 'Classical','Country','Electronic','Hip Hop','Industrial','Jazz','Pop','R&B','Rock','World']
+  def get_user_input
+    gets.chomp.strip
+  end
 
-# Started here - Decided to start my day easy and make the welcome screen look more welcoming, ascii logo added, star lines, exit message also added
+  def run
+    print "New genre search keyword: "
+    input = get_user_input
+    if input == "help"
+      help
+    elsif input == "exit"
+      exit
+    else
+      search(input)
+    end
+    run
+  end
+
+  def search
+    search_term = input.split(" ").join("%20").downcase
+    puts "You are searching for #{input.capitalize}, searching..."
+    url = "http://api.spotify.com/v1/search?q=genre:#{@search_term}&limit=50&offset=0&type=artist"
+
+
+    artists = SpotifyApi.new(url).make_artists
+    result = JSON.parse(first_url_artist_data_raw)
+    artist_information_array = result["artists"]["items"]
+
+    while result["artists"]["next"]
+      artist_data_raw = RestClient.get(result["artists"]["next"])
+      result = JSON.parse(artist_data_raw)
+      artist_information_array += result["artists"]["items"]
+  end
+
+
+
+  @@popularity_array = []
+  @@artist_hash = {}
+  @@simplified_genres = ['Blues', 'Classical','Country','Electronic','Hip Hop','Industrial','Jazz','Pop','R&B','Rock','World']
+
+  def search
+    @search_term = input.split(" ").join("%20").downcase
+
+    url = "http://api.spotify.com/v1/search?q=genre:#{@search_term}&limit=50&offset=0&type=artist"
+
+    first_url_artist_data_raw = RestClient.get(first_url)
+    result = JSON.parse(first_url_artist_data_raw)
+    artist_information_array = result["artists"]["items"]
+
+    while result["artists"]["next"]
+      artist_data_raw = RestClient.get(result["artists"]["next"])
+      result = JSON.parse(artist_data_raw)
+      artist_information_array += result["artists"]["items"]
+  end
+
   def welcome
     @welcome = WelcomeMessage.new
     @welcome.text

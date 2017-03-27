@@ -2,11 +2,11 @@ class SpotifyApi
   attr_reader :url, :api_data
 
   @simplified_genres = ['Blues', 'Classical','Country','Electronic','Hip Hop','Industrial','Jazz','Pop','R&B','Rock','World']
+  @user_input =
 
   def initialize(url)
-    @url = "http://api.spotify.com/v1/search?q=genre:rock&limit=50&offset=0&type=artist"
-    result = RestClient.get(@url)
-    @api_data = JSON.parse(result)
+    @url = url
+    @api_data = JSON.parse(RestClient.get(@url))
   end
 
   def make_artists

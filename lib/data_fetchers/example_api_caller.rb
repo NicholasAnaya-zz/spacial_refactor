@@ -1,19 +1,20 @@
 class ExampleApi
 
-  attr_reader :url, :artist_data, :artist_name
-  #Turned artist into a hash to accept the new k/v pairs of artist and popularity
-  @@artists = {}
+  attr_reader :url, :music_data
 
-  def artists
-    @@artists
+  def initialize(url)
+    @url = url
+    @music_data = JSON.parse(RestClient.get(url))
   end
 
-  #created new hashes from artist/popularity keys
-  def list_artists
-    all_artists = artist_data["artists"]["items"]
-    all_artists.each do | artist |
-            artist_name = artist["name"]
-            artists[artist_name] ||= {}
-            artists[artist_name][:popularity] = artist["popularity"]
+  def make_albums
+    albums = []
+    all_albums = music_data["tracks"]["items"]
+    all_albums.each do |album|
+      album_name = album["name"]
+      albums << ExampleModel.new(album_name)
+    end
+    albums
   end
+
 end
